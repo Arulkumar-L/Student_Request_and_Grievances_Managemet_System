@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true,timeFromCreateToActivate=20000" db_object_id="d831152dc366cf5078b65b2ed40131a1" label="Student Profile" max_length="40" name="x_1983287_studen_0_student_profile" type="collection">
+        <element label="Warden" max_length="32" name="warden" reference="sys_user" type="reference"/>
+        <element label="Class Advisor" max_length="32" name="class_advisor" reference="sys_user" type="reference"/>
+        <element label="HOD" max_length="32" name="hod" reference="sys_user" type="reference"/>
+        <element display="true" label="Student Name" mandatory="true" max_length="40" name="student_name" reference="sys_user" type="reference"/>
+        <element label="Department" mandatory="true" max_length="32" name="department" reference="x_1983287_studen_0_department" type="reference"/>
+        <element label="Hostel Block" max_length="40" name="hostel_block" type="string"/>
+        <element label="Register Number" mandatory="true" max_length="32" name="registration_number" type="string" unique="true"/>
+        <element label="Mentor" max_length="32" name="mentor" reference="sys_user" type="reference"/>
+        <element choice="1" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Active" value="active"/>
+                <element inactive_on_update="false" label="Inactive" value="inactive"/>
+                <element inactive_on_update="false" label="Suspended" value="suspended"/>
+            </choice>
+        </element>
+        <element choice="1" label="Accommodation Type" max_length="40" name="accommodation_type" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Day Scholar" value="day scholar"/>
+                <element inactive_on_update="false" label="Hosteller" value="hosteller"/>
+            </choice>
+        </element>
+        <element label="Semester" max_length="40" name="semester" type="integer"/>
+        <element label="Email" mandatory="true" max_length="40" name="email" type="string" unique="true"/>
+        <index name="index">
+            <element name="class_advisor"/>
+        </index>
+        <index name="index2">
+            <element name="department"/>
+        </index>
+        <index name="index3">
+            <element name="hod"/>
+        </index>
+        <index name="index4">
+            <element name="mentor"/>
+        </index>
+        <index name="index5">
+            <element name="registration_number"/>
+        </index>
+        <index name="index6">
+            <element name="warden"/>
+        </index>
+    </element>
+</database>

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update>
+    <sys_ui_form_sections form_id="33379d69c3a6cf5078b65b2ed40131eb" sys_domain="global" table="x_1983287_studen_0_student_profile" version="3">
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>0</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-06 18:01:21</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>73379d69c3a6cf5078b65b2ed40131fe</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_1983287_studen_0_student_profile" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">33379d69c3a6cf5078b65b2ed40131eb</sys_ui_form>
+            <sys_ui_section caption="Basic Information" display_value="Basic Information" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">fb379d69c3a6cf5078b65b2ed4013166</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-06 18:01:21</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>1</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-06 18:03:40</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>31c751e9c3a6cf5078b65b2ed40131e4</sys_id>
+            <sys_mod_count>1</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_1983287_studen_0_student_profile" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">33379d69c3a6cf5078b65b2ed40131eb</sys_ui_form>
+            <sys_ui_section caption="Academic" display_value="Academic" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">b5c751e9c3a6cf5078b65b2ed40131a0</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-06 18:03:40</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>2</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-06 18:01:21</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>7f37dd69c3a6cf5078b65b2ed4013106</sys_id>
+            <sys_mod_count>2</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_1983287_studen_0_student_profile" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">33379d69c3a6cf5078b65b2ed40131eb</sys_ui_form>
+            <sys_ui_section caption="Mentorship" display_value="Mentorship" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">77379d69c3a6cf5078b65b2ed40131e6</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-06 18:03:40</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>3</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-06 18:01:21</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>4447dd69c3a6cf5078b65b2ed4013133</sys_id>
+            <sys_mod_count>2</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_1983287_studen_0_student_profile" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">33379d69c3a6cf5078b65b2ed40131eb</sys_ui_form>
+            <sys_ui_section caption="Accommodation" display_value="Accommodation" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">ff379d69c3a6cf5078b65b2ed40131e7</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-06 18:03:40</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form_section action="INSERT_OR_UPDATE">
+            <position>4</position>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-06 18:01:21</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>0047dd69c3a6cf5078b65b2ed401313b</sys_id>
+            <sys_mod_count>2</sys_mod_count>
+            <sys_overrides/>
+            <sys_ui_form display_value="x_1983287_studen_0_student_profile" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">33379d69c3a6cf5078b65b2ed40131eb</sys_ui_form>
+            <sys_ui_section caption="Status" display_value="Status" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">7b379d69c3a6cf5078b65b2ed40131e9</sys_ui_section>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-06 18:03:40</sys_updated_on>
+        </sys_ui_form_section>
+        <sys_ui_form action="INSERT_OR_UPDATE">
+            <name>x_1983287_studen_0_student_profile</name>
+            <roles/>
+            <sys_class_name>sys_ui_form</sys_class_name>
+            <sys_created_by>admin</sys_created_by>
+            <sys_created_on>2026-08-06 18:01:20</sys_created_on>
+            <sys_domain>global</sys_domain>
+            <sys_domain_path>/</sys_domain_path>
+            <sys_id>33379d69c3a6cf5078b65b2ed40131eb</sys_id>
+            <sys_mod_count>0</sys_mod_count>
+            <sys_name>x_1983287_studen_0_student_profile</sys_name>
+            <sys_overrides/>
+            <sys_package display_value="Student Request Management System" source="x_1983287_studen_0">2bbb49edc326cf5078b65b2ed4013157</sys_package>
+            <sys_policy/>
+            <sys_scope display_value="Student Request Management System">2bbb49edc326cf5078b65b2ed4013157</sys_scope>
+            <sys_update_name>sys_ui_form_sections_33379d69c3a6cf5078b65b2ed40131eb</sys_update_name>
+            <sys_updated_by>admin</sys_updated_by>
+            <sys_updated_on>2026-08-06 18:01:20</sys_updated_on>
+            <sys_user/>
+            <view display_value="Default view" name="NULL">Default view</view>
+            <view_name/>
+        </sys_ui_form>
+    </sys_ui_form_sections>
+</record_update>
