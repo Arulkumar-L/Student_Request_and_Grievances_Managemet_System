@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true,timeFromCreateToActivate=20000" db_object_id="e00e8925c366cf5078b65b2ed40131e0" label="Department" max_length="40" name="x_1983287_studen_0_department" type="collection">
+        <element label="Code" mandatory="true" max_length="40" name="code" type="string"/>
+        <element label="HOD" max_length="32" name="hod" reference="sys_user" type="reference"/>
+        <element choice="3" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Inactive" sequence="1" value="inactive"/>
+                <element inactive_on_update="false" label="Active" sequence="0" value="active"/>
+            </choice>
+        </element>
+        <element label="Name" mandatory="true" max_length="40" name="name" type="string"/>
+        <element label="Description" max_length="40" name="description" type="string"/>
+        <index name="index">
+            <element name="hod"/>
+        </index>
+    </element>
+</database>

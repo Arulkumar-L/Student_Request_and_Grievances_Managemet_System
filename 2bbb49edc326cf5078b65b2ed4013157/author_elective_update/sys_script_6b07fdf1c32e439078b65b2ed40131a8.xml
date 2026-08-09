@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_script">
+    <sys_script action="DELETE">
+        <abort_action>false</abort_action>
+        <access>package_private</access>
+        <action_delete>false</action_delete>
+        <action_insert>true</action_insert>
+        <action_query>false</action_query>
+        <action_update>true</action_update>
+        <active>true</active>
+        <add_message>false</add_message>
+        <advanced>true</advanced>
+        <change_fields>false</change_fields>
+        <client_callable>false</client_callable>
+        <collection>x_1983287_studen_0_leave_request</collection>
+        <condition/>
+        <description/>
+        <execute_function>false</execute_function>
+        <filter_condition/>
+        <is_rest>false</is_rest>
+        <message/>
+        <name>Ensure To Date &gt;= From Date</name>
+        <order>100</order>
+        <priority>100</priority>
+        <rest_method/>
+        <rest_method_text/>
+        <rest_service/>
+        <rest_service_text/>
+        <rest_variables/>
+        <role_conditions/>
+        <script><![CDATA[(function executeRule(current, previous /*null when async*/) {
+
+	if (current.from_date && current.to_date) {
+    if (current.to_date < current.from_date) {
+        gs.addErrorMessage("End date must be after or equal to start date");
+        action.setAbortAction(true);
+    }
+}
+
+})(current, previous);]]></script>
+        <sys_class_name>sys_script</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:00:09</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>6b07fdf1c32e439078b65b2ed40131a8</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Ensure To Date &gt;= From Date</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="Student Request Management System" source="x_1983287_studen_0">2bbb49edc326cf5078b65b2ed4013157</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Student Request Management System">2bbb49edc326cf5078b65b2ed4013157</sys_scope>
+        <sys_update_name>sys_script_6b07fdf1c32e439078b65b2ed40131a8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:02:41</sys_updated_on>
+        <template/>
+        <when>before</when>
+    </sys_script>
+    <sys_translated_text action="DELETE" query="documentkey=6b07fdf1c32e439078b65b2ed40131a8"/>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="Student Request Management System">2bbb49edc326cf5078b65b2ed4013157</application>
+        <file_path/>
+        <instance_id>cc68289c3bb3461816e44a8aa4e45aa4</instance_id>
+        <instance_name>dev283363</instance_name>
+        <name>sys_script_6b07fdf1c32e439078b65b2ed40131a8</name>
+        <payload>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&lt;record_update sys_domain="global" table="sys_script"&gt;&lt;sys_script action="INSERT_OR_UPDATE"&gt;&lt;abort_action&gt;false&lt;/abort_action&gt;&lt;access&gt;package_private&lt;/access&gt;&lt;action_delete&gt;false&lt;/action_delete&gt;&lt;action_insert&gt;true&lt;/action_insert&gt;&lt;action_query&gt;false&lt;/action_query&gt;&lt;action_update&gt;true&lt;/action_update&gt;&lt;active&gt;true&lt;/active&gt;&lt;add_message&gt;false&lt;/add_message&gt;&lt;advanced&gt;true&lt;/advanced&gt;&lt;change_fields&gt;false&lt;/change_fields&gt;&lt;client_callable&gt;false&lt;/client_callable&gt;&lt;collection&gt;x_1983287_studen_0_leave_request&lt;/collection&gt;&lt;condition/&gt;&lt;description/&gt;&lt;execute_function&gt;false&lt;/execute_function&gt;&lt;filter_condition/&gt;&lt;is_rest&gt;false&lt;/is_rest&gt;&lt;message/&gt;&lt;name&gt;Ensure To Date &amp;gt;= From Date&lt;/name&gt;&lt;order&gt;100&lt;/order&gt;&lt;priority&gt;100&lt;/priority&gt;&lt;rest_method/&gt;&lt;rest_method_text/&gt;&lt;rest_service/&gt;&lt;rest_service_text/&gt;&lt;rest_variables/&gt;&lt;role_conditions/&gt;&lt;script&gt;&lt;![CDATA[(function executeRule(current, previous /*null when async*/) {
+
+	if (current.from_date &amp;&amp; current.to_date) {
+    if (current.to_date &lt; current.from_date) {
+        gs.addErrorMessage("End date must be after or equal to start date");
+        action.setAbortAction(true);
+    }
+}
+
+})(current, previous);]]&gt;&lt;/script&gt;&lt;sys_class_name&gt;sys_script&lt;/sys_class_name&gt;&lt;sys_created_by&gt;admin&lt;/sys_created_by&gt;&lt;sys_created_on&gt;2026-08-07 15:00:09&lt;/sys_created_on&gt;&lt;sys_domain&gt;global&lt;/sys_domain&gt;&lt;sys_domain_path&gt;/&lt;/sys_domain_path&gt;&lt;sys_id&gt;6b07fdf1c32e439078b65b2ed40131a8&lt;/sys_id&gt;&lt;sys_mod_count&gt;1&lt;/sys_mod_count&gt;&lt;sys_name&gt;Ensure To Date &amp;gt;= From Date&lt;/sys_name&gt;&lt;sys_overrides/&gt;&lt;sys_package display_value="Student Request Management System" source="x_1983287_studen_0"&gt;2bbb49edc326cf5078b65b2ed4013157&lt;/sys_package&gt;&lt;sys_policy/&gt;&lt;sys_scope display_value="Student Request Management System"&gt;2bbb49edc326cf5078b65b2ed4013157&lt;/sys_scope&gt;&lt;sys_update_name&gt;sys_script_6b07fdf1c32e439078b65b2ed40131a8&lt;/sys_update_name&gt;&lt;sys_updated_by&gt;admin&lt;/sys_updated_by&gt;&lt;sys_updated_on&gt;2026-08-07 15:02:41&lt;/sys_updated_on&gt;&lt;template/&gt;&lt;when&gt;before&lt;/when&gt;&lt;/sys_script&gt;&lt;sys_translated_text action="delete_multiple" query="documentkey=6b07fdf1c32e439078b65b2ed40131a8"/&gt;&lt;/record_update&gt;</payload>
+        <payload_hash>-1840279539</payload_hash>
+        <record_name>Ensure To Date &gt;= From Date</record_name>
+        <reverted_from/>
+        <source>ebbb49edc326cf5078b65b2ed401315b</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:02:41</sys_created_on>
+        <sys_id>68f7fd75c32e439078b65b2ed40131f4</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>19fdcbf6fd30000001</sys_recorded_at>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:02:41</sys_updated_on>
+        <type>Business Rule</type>
+        <update_guid>e0f7fd75572e4390cdf76e503083c0f3</update_guid>
+        <update_guid_history>e0f7fd75572e4390cdf76e503083c0f3:-1840279539,eb57f9358d2e439050e1fe9d5c47ce83:-887148138</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 15:10:59</sys_created_on>
+        <sys_db_object display_value="" name="sys_script">sys_script</sys_db_object>
+        <sys_id>e77b3549997c419a92f2c56824d7e271</sys_id>
+        <sys_metadata>6b07fdf1c32e439078b65b2ed40131a8</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Ensure To Date &gt;= From Date</sys_name>
+        <sys_package display_value="Student Request Management System" source="x_1983287_studen_0">2bbb49edc326cf5078b65b2ed4013157</sys_package>
+        <sys_parent display_value="Leave Request">712c2df9c3aa439078b65b2ed4013183</sys_parent>
+        <sys_policy/>
+        <sys_scope display_value="Student Request Management System">2bbb49edc326cf5078b65b2ed4013157</sys_scope>
+        <sys_scope_delete display_value="">0467be9d5ade4bd5803643dc1f255159</sys_scope_delete>
+        <sys_update_name>sys_script_6b07fdf1c32e439078b65b2ed40131a8</sys_update_name>
+        <sys_update_version display_value="sys_script_6b07fdf1c32e439078b65b2ed40131a8">68f7fd75c32e439078b65b2ed40131f4</sys_update_version>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 15:10:59</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

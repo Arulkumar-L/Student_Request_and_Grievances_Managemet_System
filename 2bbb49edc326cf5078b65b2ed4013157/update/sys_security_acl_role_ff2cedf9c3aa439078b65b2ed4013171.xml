@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_security_acl_role">
+    <sys_security_acl_role action="INSERT_OR_UPDATE">
+        <sys_class_name>sys_security_acl_role</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-07 14:11:18</sys_created_on>
+        <sys_id>ff2cedf9c3aa439078b65b2ed4013171</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_1983287_studen_0_leave_request.x_1983287_studen_0.user</sys_name>
+        <sys_package display_value="Student Request Management System" source="x_1983287_studen_0">2bbb49edc326cf5078b65b2ed4013157</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Student Request Management System">2bbb49edc326cf5078b65b2ed4013157</sys_scope>
+        <sys_security_acl display_value="x_1983287_studen_0_leave_request">272cedf9c3aa439078b65b2ed4013137</sys_security_acl>
+        <sys_update_name>sys_security_acl_role_ff2cedf9c3aa439078b65b2ed4013171</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-07 14:11:18</sys_updated_on>
+        <sys_user_role display_value="x_1983287_studen_0.user" name="x_1983287_studen_0.user">bbbb49edc326cf5078b65b2ed40131bb</sys_user_role>
+    </sys_security_acl_role>
+</record_update>

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element attributes="enforce_dot_walk_cross_scope_access=true" db_object_id="ae82a462c3a6c79078b65b2ed4013184" label="Grievance Request" max_length="40" name="x_1983287_studen_0_grievance_request" type="collection">
+        <element label="Student" max_length="32" name="student" reference="sys_user" type="reference"/>
+        <element choice="1" label="Priority" max_length="40" name="priority" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Urgent" value="urgent"/>
+                <element inactive_on_update="false" label="Medium" value="medium"/>
+                <element inactive_on_update="false" label="High" value="high"/>
+                <element inactive_on_update="false" label="Low" value="low"/>
+            </choice>
+        </element>
+        <element label="Attachment" max_length="40" name="attachment" type="file_attachment"/>
+        <element label="Description" max_length="1000" name="description" type="string"/>
+        <element label="Resolution" max_length="500" name="resolution" type="string"/>
+        <element choice="1" label="Status" max_length="40" name="status" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="In Progress" value="in_progress"/>
+                <element inactive_on_update="false" label="Closed" value="closed"/>
+                <element inactive_on_update="false" label="Re-Opened" value="re_opened"/>
+                <element inactive_on_update="false" label="Resolved" value="resolved"/>
+                <element inactive_on_update="false" label="Open" value="open"/>
+            </choice>
+        </element>
+        <element label="Assigned To" max_length="32" name="assigned_to" reference="sys_user" type="reference"/>
+        <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element label="Subject" max_length="200" name="subject" type="string"/>
+        <element choice="1" label="Category" max_length="40" name="category" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Academic" value="academic"/>
+                <element inactive_on_update="false" label="Examination" value="examination"/>
+                <element inactive_on_update="false" label="Hostel" value="hostel"/>
+                <element inactive_on_update="false" label="Placement" value="placement"/>
+                <element inactive_on_update="false" label="Transport" value="transport"/>
+                <element inactive_on_update="false" label="Infrastructure" value="infrastructure"/>
+                <element inactive_on_update="false" label="Others" value="others"/>
+            </choice>
+        </element>
+        <index name="index">
+            <element name="assigned_to"/>
+        </index>
+        <index name="index2">
+            <element name="student"/>
+        </index>
+    </element>
+</database>
