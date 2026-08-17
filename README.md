@@ -1,5 +1,5 @@
 ````md
-# KIOT Student Service Hub
+# Student Service Hub
 
 ### ServiceNow-based Student Self-Service & Request Management System
 
