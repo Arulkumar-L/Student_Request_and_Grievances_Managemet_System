@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function() {  /* widget controller */  var c = this;};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.tracker-card {&#13;
+  background: #ffffff;&#13;
+  border-radius: 12px;&#13;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);&#13;
+  border: 1px solid #e2e8f0;&#13;
+  overflow: hidden;&#13;
+&#13;
+  .tracker-header {&#13;
+    padding: 16px 20px;&#13;
+    background: #f8fafc;&#13;
+    border-bottom: 1px solid #e2e8f0;&#13;
+    display: flex;&#13;
+    justify-content: space-between;&#13;
+    align-items: center;&#13;
+&#13;
+    .tracker-title {&#13;
+      font-size: 16px;&#13;
+      font-weight: 700;&#13;
+      color: #1e293b;&#13;
+      span { color: #2563eb; }&#13;
+    }&#13;
+  }&#13;
+&#13;
+  .status-badge {&#13;
+    padding: 4px 12px;&#13;
+    border-radius: 20px;&#13;
+    font-size: 12px;&#13;
+    font-weight: 600;&#13;
+    text-transform: uppercase;&#13;
+    letter-spacing: 0.5px;&#13;
+&#13;
+    &amp;.badge-approved { background: #dcfce7; color: #15803d; }&#13;
+    &amp;.badge-rejected { background: #fee2e2; color: #b91c1c; }&#13;
+    &amp;.badge-pending { background: #fef3c7; color: #b45309; }&#13;
+  }&#13;
+&#13;
+  .tracker-body {&#13;
+    padding: 30px 20px;&#13;
+  }&#13;
+&#13;
+  .stepper-wrapper {&#13;
+    display: flex;&#13;
+    justify-content: space-between;&#13;
+    align-items: flex-start;&#13;
+    position: relative;&#13;
+&#13;
+    .step-item {&#13;
+      flex: 1;&#13;
+      text-align: center;&#13;
+      position: relative;&#13;
+&#13;
+      .step-line {&#13;
+        position: absolute;&#13;
+        top: 22px;&#13;
+        left: 50%;&#13;
+        width: 100%;&#13;
+        height: 3px;&#13;
+        background: #e2e8f0;&#13;
+        z-index: 1;&#13;
+      }&#13;
+&#13;
+      .step-circle {&#13;
+        position: relative;&#13;
+        z-index: 2;&#13;
+        width: 44px;&#13;
+        height: 44px;&#13;
+        border-radius: 50%;&#13;
+        background: #ffffff;&#13;
+        border: 2px solid #cbd5e1;&#13;
+        display: flex;&#13;
+        align-items: center;&#13;
+        justify-content: center;&#13;
+        margin: 0 auto 12px auto;&#13;
+        font-size: 16px;&#13;
+        color: #94a3b8;&#13;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);&#13;
+      }&#13;
+&#13;
+      .step-role {&#13;
+        font-weight: 700;&#13;
+        font-size: 13px;&#13;
+        color: #334155;&#13;
+      }&#13;
+&#13;
+      .step-user {&#13;
+        font-size: 12px;&#13;
+        color: #64748b;&#13;
+        margin: 2px 0 6px;&#13;
+      }&#13;
+&#13;
+      .step-tag {&#13;
+        display: inline-block;&#13;
+        font-size: 11px;&#13;
+        font-weight: 600;&#13;
+        padding: 2px 8px;&#13;
+        border-radius: 6px;&#13;
+        background: #f1f5f9;&#13;
+        color: #64748b;&#13;
+      }&#13;
+&#13;
+      /* Dynamic State Styling */&#13;
+      &amp;.is-approved {&#13;
+        .step-line { background: #22c55e; }&#13;
+        .step-circle {&#13;
+          background: #22c55e;&#13;
+          border-color: #22c55e;&#13;
+          color: #ffffff;&#13;
+          box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.2);&#13;
+        }&#13;
+        .step-tag { background: #dcfce7; color: #15803d; }&#13;
+      }&#13;
+&#13;
+      &amp;.is-pending {&#13;
+        .step-circle {&#13;
+          background: #f59e0b;&#13;
+          border-color: #f59e0b;&#13;
+          color: #ffffff;&#13;
+          box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.2);&#13;
+        }&#13;
+        .step-tag { background: #fef3c7; color: #b45309; }&#13;
+      }&#13;
+&#13;
+      &amp;.is-rejected {&#13;
+        .step-line { background: #ef4444; }&#13;
+        .step-circle {&#13;
+          background: #ef4444;&#13;
+          border-color: #ef4444;&#13;
+          color: #ffffff;&#13;
+          box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);&#13;
+        }&#13;
+        .step-tag { background: #fee2e2; color: #b91c1c; }&#13;
+      }&#13;
+&#13;
+      &amp;.is-na {&#13;
+        .step-circle {&#13;
+          background: #f8fafc;&#13;
+          border-color: #e2e8f0;&#13;
+          color: #cbd5e1;&#13;
+        }&#13;
+      }&#13;
+    }&#13;
+  }&#13;
+&#13;
+  .rejection-box {&#13;
+    margin-top: 25px;&#13;
+    padding: 12px 16px;&#13;
+    background: #fef2f2;&#13;
+    border-left: 4px solid #ef4444;&#13;
+    border-radius: 4px;&#13;
+    color: #991b1b;&#13;
+    font-size: 13px;&#13;
+  }&#13;
+}&#13;
+&#13;
+.empty-selection-card {&#13;
+  background: #ffffff;&#13;
+  border: 2px dashed #cbd5e1;&#13;
+  border-radius: 12px;&#13;
+  padding: 40px 20px;&#13;
+  text-align: center;&#13;
+  color: #64748b;&#13;
+  p { margin-top: 10px; font-weight: 500; }&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>student_request_approval_tracker</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>Student Request Approval Tracker</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    data.hasRecord = false;
+    data.approvers = [];
+
+    var inputTable = (typeof input !== 'undefined' && input) ? input.table : null;
+    var inputRecordId = (typeof input !== 'undefined' && input) ? input.record_id : null;
+
+    var targetId = $sp.getParameter('sys_id') || inputRecordId;
+    var targetTable = $sp.getParameter('table') || inputTable || 'x_1983287_studen_0_leave_request';
+
+    if (!targetId) return;
+
+    var reqGR = new GlideRecord(targetTable);
+    if (reqGR.get(targetId)) {
+        data.hasRecord = true;
+        data.record_type = (targetTable.indexOf('leave') > -1) ? 'Leave' : ((targetTable.indexOf('od') > -1) ? 'On-Duty (OD)' : 'Grievance');
+        data.record_number = reqGR.getValue('number') || reqGR.getDisplayValue();
+        data.overall_status = reqGR.getValue('status') || 'Submitted';
+        data.rejection_reason = reqGR.isValidField('rejection_reason') ? reqGR.getValue('rejection_reason') : '';
+
+        var stuProfile = reqGR.student.getRefRecord();
+        var isValidStu = stuProfile.isValidRecord();
+
+        function normalizeStatus(val) {
+            if (!val) return 'Pending';
+            var s = String(val).toLowerCase();
+            if (s === 'approved') return 'Approved';
+            if (s === 'rejected') return 'Rejected';
+            if (s === 'not required' || s === 'not_required') return 'Not Required';
+            return 'Pending';
+        }
+
+        // ==========================================
+        // 1. LEAVE & OD REQUEST TRACKING PIPELINE
+        // ==========================================
+        if (targetTable.indexOf('grievance') === -1) {
+            var isHosteller = isValidStu && (stuProfile.getValue('accommodation_type') === 'Hosteller');
+
+            var mStatus = normalizeStatus(reqGR.getValue('mentor_approval'));
+            var aStatus = normalizeStatus(reqGR.getValue('advisor_approval'));
+            var hStatus = normalizeStatus(reqGR.getValue('hod_approval'));
+            var wStatus = isHosteller ? normalizeStatus(reqGR.getValue('warden_approval')) : 'Not Required';
+
+            // Auto-align overall status if all required approvers approved
+            if (!isHosteller && mStatus === 'Approved' && aStatus === 'Approved' && hStatus === 'Approved') {
+                data.overall_status = 'Approved';
+            } else if (isHosteller && mStatus === 'Approved' && aStatus === 'Approved' && hStatus === 'Approved' && wStatus === 'Approved') {
+                data.overall_status = 'Approved';
+            }
+
+            // Stage 1: Mentor
+            data.approvers.push({
+                role: 'Mentor',
+                role_icon: 'fa-user',
+                status: mStatus,
+                person_name: isValidStu && stuProfile.mentor ? stuProfile.mentor.getDisplayValue() : 'Assigned Mentor'
+            });
+
+            // Stage 2: Class Advisor
+            data.approvers.push({
+                role: 'Class Advisor',
+                role_icon: 'fa-graduation-cap',
+                status: aStatus,
+                person_name: isValidStu && stuProfile.class_advisor ? stuProfile.class_advisor.getDisplayValue() : 'Class Advisor'
+            });
+
+            // Stage 3: HOD
+            var hodName = 'HOD';
+            if (isValidStu) {
+                if (stuProfile.hod) hodName = stuProfile.hod.getDisplayValue();
+                else if (stuProfile.department && stuProfile.department.hod) hodName = stuProfile.department.hod.getDisplayValue();
+            }
+            data.approvers.push({
+                role: 'HOD',
+                role_icon: 'fa-university',
+                status: hStatus,
+                person_name: hodName
+            });
+
+            // Stage 4: Warden
+            data.approvers.push({
+                role: 'Warden',
+                role_icon: 'fa-building',
+                status: wStatus,
+                person_name: isHosteller ? (stuProfile.warden ? stuProfile.warden.getDisplayValue() : 'Hostel Warden') : 'Day Scholar'
+            });
+        } 
+        // ==========================================
+        // 2. GRIEVANCE REDRESSAL PIPELINE
+        // ==========================================
+        else {
+            var gStatus = (reqGR.getValue('status') || 'Open').toLowerCase();
+            var assignedToName = reqGR.assigned_to ? reqGR.assigned_to.getDisplayValue() : 'Pending Assignment';
+
+            // Stage 1: Logged / Submitted
+            data.approvers.push({
+                role: 'Submitted',
+                role_icon: 'fa-file-text-o',
+                status: 'Approved',
+                person_name: 'System Logged'
+            });
+
+            // Stage 2: Assigned Authority
+            data.approvers.push({
+                role: 'Assigned To',
+                role_icon: 'fa-user-secret',
+                status: (reqGR.assigned_to) ? 'Approved' : 'Pending',
+                person_name: assignedToName
+            });
+
+            // Stage 3: In Review / Action
+            var inReviewStatus = (gStatus === 'in progress' || gStatus === 'investigating' || gStatus === 'resolved' || gStatus === 'closed') ? 'Approved' : (reqGR.assigned_to ? 'Pending' : 'Pending');
+            data.approvers.push({
+                role: 'Under Review',
+                role_icon: 'fa-search',
+                status: inReviewStatus,
+                person_name: 'Committee'
+            });
+
+            // Stage 4: Resolution
+            var resStatus = (gStatus === 'resolved' || gStatus === 'closed') ? 'Approved' : 'Pending';
+            data.approvers.push({
+                role: 'Resolved',
+                role_icon: 'fa-check-circle',
+                status: resStatus,
+                person_name: reqGR.getValue('resolution') || 'Pending Resolution'
+            });
+        }
+    }
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-15 06:33:43</sys_created_on>
+        <sys_id>4f20599c83bac71088dec1ffeeaad3dc</sys_id>
+        <sys_mod_count>6</sys_mod_count>
+        <sys_name>Student Request Approval Tracker</sys_name>
+        <sys_package display_value="Student Request Management System" source="x_1983287_studen_0">2bbb49edc326cf5078b65b2ed4013157</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Student Request Management System">2bbb49edc326cf5078b65b2ed4013157</sys_scope>
+        <sys_update_name>sp_widget_4f20599c83bac71088dec1ffeeaad3dc</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 17:11:29</sys_updated_on>
+        <template><![CDATA[<div class="tracker-card" ng-if="data.hasRecord">
+  <div class="tracker-header">
+    <div class="tracker-title">
+      <i class="fa fa-sitemap text-primary"></i> {{data.record_type}} Tracking: <span>{{data.record_number}}</span>
+    </div>
+    <span class="status-badge" ng-class="{
+      'badge-approved': data.overall_status.toLowerCase() === 'approved' || data.overall_status.toLowerCase() === 'resolved' || data.overall_status.toLowerCase() === 'closed',
+      'badge-rejected': data.overall_status.toLowerCase() === 'rejected',
+      'badge-pending': data.overall_status.toLowerCase() !== 'approved' && data.overall_status.toLowerCase() !== 'resolved' && data.overall_status.toLowerCase() !== 'closed' && data.overall_status.toLowerCase() !== 'rejected'
+    }">{{data.overall_status}}</span>
+  </div>
+
+  <div class="tracker-body">
+    <div class="stepper-wrapper">
+      <div class="step-item" ng-repeat="approver in data.approvers" ng-class="{
+        'is-approved': approver.status === 'Approved',
+        'is-rejected': approver.status === 'Rejected',
+        'is-pending': approver.status === 'Pending',
+        'is-na': approver.status === 'Not Required'
+      }">
+        <div class="step-line" ng-if="!$last"></div>
+        <div class="step-circle">
+          <i ng-if="approver.status === 'Approved'" class="fa fa-check"></i>
+          <i ng-if="approver.status === 'Rejected'" class="fa fa-times"></i>
+          <i ng-if="approver.status === 'Pending'" class="fa fa-hourglass-half"></i>
+          <i ng-if="approver.status === 'Not Required'" class="fa fa-minus"></i>
+        </div>
+        <div class="step-content">
+          <div class="step-role">
+            <i class="fa {{approver.role_icon}} m-r-xs text-muted"></i>{{approver.role}}
+          </div>
+          <div class="step-user">{{approver.person_name}}</div>
+          <span class="step-tag">{{approver.status}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div ng-if="data.rejection_reason" class="rejection-box">
+      <strong><i class="fa fa-exclamation-triangle"></i> Reason:</strong> {{data.rejection_reason}}
+    </div>
+  </div>
+</div>
+
+<div class="empty-selection-card" ng-if="!data.hasRecord">
+  <i class="fa fa-hand-o-left fa-2x text-muted"></i>
+  <p>Select any Leave, OD, or Grievance request from the left list to track its live status</p>
+</div>]]></template>
+    </sp_widget>
+    <sys_es_latest_script action="INSERT_OR_UPDATE">
+        <id>4f20599c83bac71088dec1ffeeaad3dc</id>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-15 06:33:43</sys_created_on>
+        <sys_id>cb20599c83bac71088dec1ffeeaad3e3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-15 06:33:43</sys_updated_on>
+        <table>sp_widget</table>
+        <use_es_latest>true</use_es_latest>
+    </sys_es_latest_script>
+</record_update>

@@ -1,0 +1,597 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, spUtil) {
+  var c = this;
+
+  c.takeAction = function(item, actionType, rejectReason) {
+    c.server.get({
+      action: actionType,
+      table: item.table,
+      sys_id: item.sys_id,
+      stage: item.stage,
+      reason: rejectReason || ''
+    }).then(function(r) {
+      c.data.pendingList = r.data.pendingList;
+      c.data.staffReports = r.data.staffReports;
+      spUtil.addInfoMessage(item.number + ' has been ' + actionType + 'd.');
+    });
+  };
+
+  c.promptReject = function(item) {
+    var reason = prompt("Enter Rejection Reason for " + item.number + ":", "Incomplete documentation");
+    if (reason !== null && reason.trim() !== "") {
+      c.takeAction(item, 'reject', reason);
+    }
+  };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.portal-root {&#13;
+  /* Staff Dashboard Styling */&#13;
+  .staff-header-panel {&#13;
+    background: #ffffff;&#13;
+    padding: 18px 24px;&#13;
+    border-radius: 12px;&#13;
+    margin-bottom: 20px;&#13;
+    border: 1px solid #e2e8f0;&#13;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);&#13;
+  }&#13;
+&#13;
+  .stat-report-card {&#13;
+    border-radius: 12px;&#13;
+    padding: 16px 20px;&#13;
+    color: #ffffff;&#13;
+    display: flex;&#13;
+    align-items: center;&#13;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);&#13;
+    margin-bottom: 15px;&#13;
+&#13;
+    .report-icon {&#13;
+      font-size: 28px;&#13;
+      margin-right: 15px;&#13;
+      opacity: 0.9;&#13;
+    }&#13;
+    .report-num {&#13;
+      font-size: 22px;&#13;
+      font-weight: 800;&#13;
+      line-height: 1.1;&#13;
+    }&#13;
+    .report-lbl {&#13;
+      font-size: 11px;&#13;
+      text-transform: uppercase;&#13;
+      font-weight: 600;&#13;
+      opacity: 0.9;&#13;
+    }&#13;
+&#13;
+    &amp;.bg-amber { background: linear-gradient(135deg, #f59e0b, #d97706); }&#13;
+    &amp;.bg-green { background: linear-gradient(135deg, #10b981, #059669); }&#13;
+    &amp;.bg-red { background: linear-gradient(135deg, #ef4444, #dc2626); }&#13;
+    &amp;.bg-purple { background: linear-gradient(135deg, #8b5cf6, #7c3aed); }&#13;
+  }&#13;
+&#13;
+  .inbox-panel {&#13;
+    border-radius: 12px;&#13;
+    border: 1px solid #e2e8f0;&#13;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);&#13;
+    overflow: hidden;&#13;
+&#13;
+    .badge-stage { background-color: #2563eb; padding: 5px 10px; font-size: 11px; }&#13;
+    .action-btns .btn { border-radius: 20px; font-weight: 600; padding: 4px 12px; margin-left: 4px; }&#13;
+  }&#13;
+&#13;
+  /* Student Action Cards */&#13;
+  .action-card {&#13;
+    display: block;&#13;
+    padding: 24px 16px;&#13;
+    text-align: center;&#13;
+    background: #ffffff;&#13;
+    border-radius: 12px;&#13;
+    border: 1px solid #e2e8f0;&#13;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);&#13;
+    text-decoration: none;&#13;
+    transition: all 0.25s ease-in-out;&#13;
+    margin-bottom: 20px;&#13;
+&#13;
+    i {&#13;
+      font-size: 38px;&#13;
+      margin-bottom: 12px;&#13;
+      display: inline-block;&#13;
+    }&#13;
+    h4 {&#13;
+      font-weight: 700;&#13;
+      margin: 0 0 6px 0;&#13;
+      color: #1e293b;&#13;
+    }&#13;
+    p {&#13;
+      font-size: 12px;&#13;
+      color: #64748b;&#13;
+      margin: 0;&#13;
+    }&#13;
+&#13;
+    &amp;.card-blue i { color: #2563eb; }&#13;
+    &amp;.card-teal i { color: #0d9488; }&#13;
+    &amp;.card-amber i { color: #d97706; }&#13;
+    &amp;.card-green i { color: #16a34a; }&#13;
+&#13;
+    &amp;:hover {&#13;
+      transform: translateY(-5px);&#13;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.08);&#13;
+      text-decoration: none;&#13;
+    }&#13;
+  }&#13;
+&#13;
+  /* Student Summary Cards */&#13;
+  .summary-grid {&#13;
+    .stat-card {&#13;
+      border-radius: 12px;&#13;
+      padding: 20px;&#13;
+      margin-bottom: 20px;&#13;
+      color: #ffffff;&#13;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.06);&#13;
+&#13;
+      &amp;.stat-blue { background: linear-gradient(135deg, #2563eb, #1d4ed8); }&#13;
+      &amp;.stat-teal { background: linear-gradient(135deg, #0d9488, #0f766e); }&#13;
+      &amp;.stat-amber { background: linear-gradient(135deg, #d97706, #b45309); }&#13;
+&#13;
+      .stat-heading { font-size: 15px; font-weight: 700; margin: 0 0 10px 0; text-transform: uppercase; }&#13;
+      .stat-metrics { display: flex; align-items: center; }&#13;
+      .metric { flex: 1; .val { font-size: 24px; font-weight: 800; display: block; } .lbl { font-size: 11px; text-transform: uppercase; opacity: 0.8; } }&#13;
+      .metric-divider { width: 1px; height: 28px; background: rgba(255, 255, 255, 0.25); margin: 0 12px; }&#13;
+    }&#13;
+  }&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>srms_dynamic_dashboard</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>SRMS dynamic dashboard</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    var userId = gs.getUserID();
+    var userEmail = gs.getUser().getEmail();
+
+    data.isApprover = false;
+    data.approverRoles = [];
+    data.pendingList = [];
+    data.staffReports = {
+        leavePending: 0,
+        leaveApproved: 0,
+        leaveRejected: 0,
+        odPending: 0,
+        odApproved: 0,
+        odRejected: 0,
+        emergencyCount: 0,
+        hostellerLeaves: 0
+    };
+
+    // 1. Process Actions (Approve / Reject)
+    if (input && input.action) {
+        var recGr = new GlideRecord(input.table);
+        if (recGr.get(input.sys_id)) {
+            var stg = input.stage;
+            if (input.action === 'approve') {
+                if (stg === 'Mentor') recGr.setValue('mentor_approval', 'Approved');
+                if (stg === 'Class Advisor') recGr.setValue('advisor_approval', 'Approved');
+                if (stg === 'HOD') recGr.setValue('hod_approval', 'Approved');
+                if (stg === 'Warden') recGr.setValue('warden_approval', 'Approved');
+            } else if (input.action === 'reject') {
+                if (stg === 'Mentor') recGr.setValue('mentor_approval', 'Rejected');
+                if (stg === 'Class Advisor') recGr.setValue('advisor_approval', 'Rejected');
+                if (stg === 'HOD') recGr.setValue('hod_approval', 'Rejected');
+                if (stg === 'Warden') recGr.setValue('warden_approval', 'Rejected');
+                
+                recGr.setValue('status', 'Rejected');
+                recGr.setValue('rejection_reason', input.reason || 'Rejected by ' + stg);
+            }
+            recGr.update();
+        }
+    }
+
+    // 2. Role Determination
+    var mentorCheck = new GlideRecord('x_1983287_studen_0_student_profile');
+    mentorCheck.addQuery('mentor', userId).addOrCondition('mentor.email', userEmail);
+    mentorCheck.query();
+    if (mentorCheck.hasNext()) data.approverRoles.push('Mentor');
+
+    var advisorCheck = new GlideRecord('x_1983287_studen_0_student_profile');
+    advisorCheck.addQuery('class_advisor', userId).addOrCondition('class_advisor.email', userEmail);
+    advisorCheck.query();
+    if (advisorCheck.hasNext()) data.approverRoles.push('Class Advisor');
+
+    var hodCheck = new GlideRecord('x_1983287_studen_0_student_profile');
+    hodCheck.addQuery('hod', userId).addOrCondition('department.hod', userId);
+    hodCheck.query();
+    if (hodCheck.hasNext() || gs.hasRole('admin')) data.approverRoles.push('HOD');
+
+    var wardenCheck = new GlideRecord('x_1983287_studen_0_student_profile');
+    wardenCheck.addQuery('warden', userId).addOrCondition('warden.email', userEmail);
+    wardenCheck.query();
+    if (wardenCheck.hasNext()) data.approverRoles.push('Warden');
+
+    data.isApprover = (data.approverRoles.length > 0) || gs.hasRole('admin');
+
+    function norm(v) { return (v || 'pending').toLowerCase(); }
+
+    // ==========================================
+    // 3. STAFF / APPROVER DATA PIPELINE
+    // ==========================================
+    if (data.isApprover) {
+        // Fetch Pending Leave Requests
+        var leaveGr = new GlideRecord('x_1983287_studen_0_leave_request');
+        leaveGr.addQuery('status', 'Submitted');
+        leaveGr.orderByDesc('sys_created_on');
+        leaveGr.query();
+
+        while (leaveGr.next()) {
+            var stu = leaveGr.student.getRefRecord();
+            var isHosteller = stu.getValue('accommodation_type') === 'Hosteller';
+            var mApp = norm(leaveGr.getValue('mentor_approval'));
+            var aApp = norm(leaveGr.getValue('advisor_approval'));
+            var hApp = norm(leaveGr.getValue('hod_approval'));
+            var wApp = norm(leaveGr.getValue('warden_approval'));
+
+            var stage = '';
+            if (mApp === 'pending' && (data.approverRoles.indexOf('Mentor') > -1 || gs.hasRole('admin'))) stage = 'Mentor';
+            else if (mApp === 'approved' && aApp === 'pending' && (data.approverRoles.indexOf('Class Advisor') > -1 || gs.hasRole('admin'))) stage = 'Class Advisor';
+            else if (aApp === 'approved' && hApp === 'pending' && (data.approverRoles.indexOf('HOD') > -1 || gs.hasRole('admin'))) stage = 'HOD';
+            else if (isHosteller && hApp === 'approved' && wApp === 'pending' && (data.approverRoles.indexOf('Warden') > -1 || gs.hasRole('admin'))) stage = 'Warden';
+
+            if (stage) {
+                data.pendingList.push({
+                    sys_id: leaveGr.getUniqueValue(),
+                    type: 'Leave',
+                    table: 'x_1983287_studen_0_leave_request',
+                    number: leaveGr.getValue('number'),
+                    student_name: stu.isValidRecord() ? stu.getValue('student_name') : 'Student',
+                    reg_no: leaveGr.getValue('register_number') || '',
+                    acc_type: stu.isValidRecord() ? stu.getValue('accommodation_type') : '',
+                    leave_type: leaveGr.getValue('leave_type') || 'Leave',
+                    details: (leaveGr.getValue('leave_type') || 'Leave') + ' (' + leaveGr.getValue('from_date') + ' to ' + leaveGr.getValue('to_date') + ')',
+                    reason: leaveGr.getValue('reason') || 'No reason provided',
+                    stage: stage
+                });
+            }
+        }
+
+        // Fetch Pending OD Requests
+        var odGr = new GlideRecord('x_1983287_studen_0_od_request');
+        odGr.addQuery('status', 'Submitted');
+        odGr.orderByDesc('sys_created_on');
+        odGr.query();
+
+        while (odGr.next()) {
+            var stuOd = odGr.student.getRefRecord();
+            var isHostellerOd = stuOd.getValue('accommodation_type') === 'Hosteller';
+            var mAppOd = norm(odGr.getValue('mentor_approval'));
+            var aAppOd = norm(odGr.getValue('advisor_approval'));
+            var hAppOd = norm(odGr.getValue('hod_approval'));
+            var wAppOd = norm(odGr.getValue('warden_approval'));
+
+            var stageOd = '';
+            if (mAppOd === 'pending' && (data.approverRoles.indexOf('Mentor') > -1 || gs.hasRole('admin'))) stageOd = 'Mentor';
+            else if (mAppOd === 'approved' && aAppOd === 'pending' && (data.approverRoles.indexOf('Class Advisor') > -1 || gs.hasRole('admin'))) stageOd = 'Class Advisor';
+            else if (aAppOd === 'approved' && hAppOd === 'pending' && (data.approverRoles.indexOf('HOD') > -1 || gs.hasRole('admin'))) stageOd = 'HOD';
+            else if (isHostellerOd && hAppOd === 'approved' && wAppOd === 'pending' && (data.approverRoles.indexOf('Warden') > -1 || gs.hasRole('admin'))) stageOd = 'Warden';
+
+            if (stageOd) {
+                data.pendingList.push({
+                    sys_id: odGr.getUniqueValue(),
+                    type: 'On-Duty (OD)',
+                    table: 'x_1983287_studen_0_od_request',
+                    number: odGr.getValue('number'),
+                    student_name: stuOd.isValidRecord() ? stuOd.getValue('student_name') : 'Student',
+                    reg_no: odGr.getValue('register_number') || '',
+                    acc_type: stuOd.isValidRecord() ? stuOd.getValue('accommodation_type') : '',
+                    leave_type: 'On-Duty',
+                    details: (odGr.getValue('event_activity') || 'OD') + ' at ' + (odGr.getValue('organization') || 'College'),
+                    reason: odGr.getValue('reason') || 'No reason provided',
+                    stage: stageOd
+                });
+            }
+        }
+
+        // Aggregate Staff Analytics & Reports
+        var lAgg = new GlideAggregate('x_1983287_studen_0_leave_request');
+        lAgg.addAggregate('COUNT', 'status');
+        lAgg.groupBy('status');
+        lAgg.query();
+        while (lAgg.next()) {
+            var stL = norm(lAgg.getValue('status'));
+            var cntL = parseInt(lAgg.getAggregate('COUNT', 'status'), 10);
+            if (stL === 'approved') data.staffReports.leaveApproved += cntL;
+            else if (stL === 'rejected') data.staffReports.leaveRejected += cntL;
+            else data.staffReports.leavePending += cntL;
+        }
+
+        var oAgg = new GlideAggregate('x_1983287_studen_0_od_request');
+        oAgg.addAggregate('COUNT', 'status');
+        oAgg.groupBy('status');
+        oAgg.query();
+        while (oAgg.next()) {
+            var stO = norm(oAgg.getValue('status'));
+            var cntO = parseInt(oAgg.getAggregate('COUNT', 'status'), 10);
+            if (stO === 'approved') data.staffReports.odApproved += cntO;
+            else if (stO === 'rejected') data.staffReports.odRejected += cntO;
+            else data.staffReports.odPending += cntO;
+        }
+
+        // Emergency Leaves Count
+        var emgGr = new GlideAggregate('x_1983287_studen_0_leave_request');
+        emgGr.addQuery('leave_type', 'Emergency').addOrCondition('leave_type', 'Medical');
+        emgGr.addAggregate('COUNT');
+        emgGr.query();
+        if (emgGr.next()) {
+            data.staffReports.emergencyCount = parseInt(emgGr.getAggregate('COUNT'), 10);
+        }
+
+        return; // Staff initialization complete
+    }
+
+    // ==========================================
+    // 4. STUDENT DATA PIPELINE (Only for students)
+    // ==========================================
+    data.leave_pending = 0; data.leave_approved = 0;
+    data.od_pending = 0; data.od_approved = 0;
+    data.grievance_open = 0; data.grievance_resolved = 0;
+
+    var stuProfile = new GlideRecord('x_1983287_studen_0_student_profile');
+    stuProfile.addQuery('email', userEmail);
+    stuProfile.query();
+    var stuId = stuProfile.next() ? stuProfile.getUniqueValue() : null;
+
+    if (stuId) {
+        var lC = new GlideAggregate('x_1983287_studen_0_leave_request');
+        lC.addQuery('student', stuId); lC.addAggregate('COUNT', 'status'); lC.groupBy('status'); lC.query();
+        while (lC.next()) {
+            var st = norm(lC.getValue('status'));
+            var cnt = parseInt(lC.getAggregate('COUNT', 'status'), 10);
+            if (st === 'approved') data.leave_approved += cnt;
+            else if (st === 'submitted' || st === 'pending') data.leave_pending += cnt;
+        }
+
+        var oC = new GlideAggregate('x_1983287_studen_0_od_request');
+        oC.addQuery('student', stuId); oC.addAggregate('COUNT', 'status'); oC.groupBy('status'); oC.query();
+        while (oC.next()) {
+            var ost = norm(oC.getValue('status'));
+            var ocnt = parseInt(oC.getAggregate('COUNT', 'status'), 10);
+            if (ost === 'approved') data.od_approved += ocnt;
+            else if (ost === 'submitted' || ost === 'pending') data.od_pending += ocnt;
+        }
+
+        var gC = new GlideAggregate('x_1983287_studen_0_grievance_request');
+        gC.addQuery('student', stuId); gC.addAggregate('COUNT', 'status'); gC.groupBy('status'); gC.query();
+        while (gC.next()) {
+            var gst = norm(gC.getValue('status'));
+            var gcnt = parseInt(gC.getAggregate('COUNT', 'status'), 10);
+            if (gst === 'resolved' || gst === 'closed') data.grievance_resolved += gcnt;
+            else data.grievance_open += gcnt;
+        }
+    }
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 16:34:03</sys_created_on>
+        <sys_id>3c7c2549837e4f1088dec1ffeeaad396</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>SRMS dynamic dashboard</sys_name>
+        <sys_package display_value="Student Request Management System" source="x_1983287_studen_0">2bbb49edc326cf5078b65b2ed4013157</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Student Request Management System">2bbb49edc326cf5078b65b2ed4013157</sys_scope>
+        <sys_update_name>sp_widget_3c7c2549837e4f1088dec1ffeeaad396</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 16:57:37</sys_updated_on>
+        <template><![CDATA[<div class="portal-root">
+
+  <!-- ======================================================== -->
+  <!-- 1. STAFF / APPROVER EXCLUSIVE UI (NO STUDENT BUTTONS)     -->
+  <!-- ======================================================== -->
+  <div ng-if="data.isApprover">
+
+    <!-- Staff Header -->
+    <div class="staff-header-panel">
+      <div class="pull-left">
+        <h3 class="m-n font-bold text-dark"><i class="fa fa-check-square text-primary m-r-xs"></i> Staff Approval & Analytics Dashboard</h3>
+        <p class="text-muted m-t-xs">
+          Role Access: 
+          <span ng-repeat="r in data.approverRoles" class="label label-primary m-r-xs">{{r}}</span>
+        </p>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+
+    <!-- Interactive Report Metrics Strip -->
+    <div class="row m-b-md">
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-report-card bg-amber">
+          <div class="report-icon"><i class="fa fa-hourglass-half"></i></div>
+          <div class="report-data">
+            <div class="report-num">{{data.pendingList.length}}</div>
+            <div class="report-lbl">Pending Actions</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-report-card bg-green">
+          <div class="report-icon"><i class="fa fa-check-circle"></i></div>
+          <div class="report-data">
+            <div class="report-num">{{data.staffReports.leaveApproved + data.staffReports.odApproved}}</div>
+            <div class="report-lbl">Total Approved</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-report-card bg-red">
+          <div class="report-icon"><i class="fa fa-times-circle"></i></div>
+          <div class="report-data">
+            <div class="report-num">{{data.staffReports.leaveRejected + data.staffReports.odRejected}}</div>
+            <div class="report-lbl">Total Rejected</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-sm-6">
+        <div class="stat-report-card bg-purple">
+          <div class="report-icon"><i class="fa fa-heartbeat"></i></div>
+          <div class="report-data">
+            <div class="report-num">{{data.staffReports.emergencyCount}}</div>
+            <div class="report-lbl">Emergency Requests</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Approver Action Center (List of Pending Requests) -->
+    <div class="panel panel-default inbox-panel">
+      <div class="panel-heading">
+        <div class="pull-left">
+          <h4 class="panel-title font-bold">
+            <i class="fa fa-inbox text-warning m-r-xs"></i> Pending Student Approvals ({{data.pendingList.length}})
+          </h4>
+        </div>
+        <div class="pull-right">
+          <span class="badge badge-warning">{{data.pendingList.length}} Action Required</span>
+        </div>
+        <div class="clearfix"></div>
+      </div>
+
+      <div class="table-responsive" ng-if="data.pendingList.length > 0">
+        <table class="table table-hover align-middle m-b-none">
+          <thead>
+            <tr>
+              <th>Type</th>
+              <th>Request #</th>
+              <th>Student Details</th>
+              <th>Request Details</th>
+              <th>Your Stage</th>
+              <th class="text-right">Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="item in data.pendingList">
+              <td>
+                <span class="label" ng-class="{'label-primary': item.type === 'Leave', 'label-info': item.type !== 'Leave'}">{{item.type}}</span>
+                <span ng-if="item.leave_type === 'Emergency'" class="label label-danger m-l-xs">Emergency</span>
+              </td>
+              <td><strong>{{item.number}}</strong></td>
+              <td>
+                <div class="font-bold">{{item.student_name}}</div>
+                <small class="text-muted">{{item.reg_no}} &bull; {{item.acc_type}}</small>
+              </td>
+              <td>
+                <div>{{item.details}}</div>
+                <small class="text-muted italic">"{{item.reason}}"</small>
+              </td>
+              <td><span class="badge badge-stage">{{item.stage}}</span></td>
+              <td class="text-right action-btns">
+                <button class="btn btn-sm btn-success" ng-click="c.takeAction(item, 'approve')">
+                  <i class="fa fa-check"></i> Approve
+                </button>
+                <button class="btn btn-sm btn-danger" ng-click="c.promptReject(item)">
+                  <i class="fa fa-times"></i> Reject
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="p-xl text-center text-muted" ng-if="data.pendingList.length === 0">
+        <i class="fa fa-smile-o fa-3x text-success"></i>
+        <h4 class="m-t-md">All Clear!</h4>
+        <p>No student requests are waiting in your approval queue.</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ======================================================== -->
+  <!-- 2. STUDENT EXCLUSIVE UI (ONLY STUDENTS SEE THIS)          -->
+  <!-- ======================================================== -->
+  <div ng-if="!data.isApprover">
+
+    <!-- Action Cards -->
+    <div class="row m-b-lg">
+      <div class="col-sm-3 col-xs-6">
+        <a href="?id=apply_leave" class="action-card card-blue">
+          <i class="fa fa-calendar-plus-o"></i>
+          <h4>Apply Leave</h4>
+          <p>Submit college leave application</p>
+        </a>
+      </div>
+      <div class="col-sm-3 col-xs-6">
+        <a href="?id=apply_od" class="action-card card-teal">
+          <i class="fa fa-briefcase"></i>
+          <h4>Apply OD</h4>
+          <p>Request On-Duty permission</p>
+        </a>
+      </div>
+      <div class="col-sm-3 col-xs-6">
+        <a href="?id=apply_grievance" class="action-card card-amber">
+          <i class="fa fa-exclamation-circle"></i>
+          <h4>Raise Grievance</h4>
+          <p>Submit issues to redressal cell</p>
+        </a>
+      </div>
+      <div class="col-sm-3 col-xs-6">
+        <a href="?id=my_requests_stms" class="action-card card-green">
+          <i class="fa fa-list-alt"></i>
+          <h4>Track Requests</h4>
+          <p>Live status & approval stages</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- Student Summary Counters -->
+    <div class="row summary-grid">
+      <div class="col-md-4">
+        <div class="stat-card stat-blue">
+          <div class="stat-content">
+            <h4 class="stat-heading">Leave Requests</h4>
+            <div class="stat-metrics">
+              <div class="metric"><span class="val">{{data.leave_pending}}</span><span class="lbl">Pending</span></div>
+              <div class="metric-divider"></div>
+              <div class="metric"><span class="val text-success-bright">{{data.leave_approved}}</span><span class="lbl">Approved</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card stat-teal">
+          <div class="stat-content">
+            <h4 class="stat-heading">OD Requests</h4>
+            <div class="stat-metrics">
+              <div class="metric"><span class="val">{{data.od_pending}}</span><span class="lbl">Pending</span></div>
+              <div class="metric-divider"></div>
+              <div class="metric"><span class="val text-success-bright">{{data.od_approved}}</span><span class="lbl">Approved</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="stat-card stat-amber">
+          <div class="stat-content">
+            <h4 class="stat-heading">Grievances</h4>
+            <div class="stat-metrics">
+              <div class="metric"><span class="val">{{data.grievance_open}}</span><span class="lbl">Open</span></div>
+              <div class="metric-divider"></div>
+              <div class="metric"><span class="val text-success-bright">{{data.grievance_resolved}}</span><span class="lbl">Resolved</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>]]></template>
+    </sp_widget>
+</record_update>

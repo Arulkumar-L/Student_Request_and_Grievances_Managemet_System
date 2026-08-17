@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($location) {
+  var c = this;
+  
+  // Set default tab based on URL table param, or default to 'leave'
+  var urlTable = $location.search().table || '';
+  if (urlTable.indexOf('od') > -1) {
+    c.activeTab = 'od';
+  } else if (urlTable.indexOf('grievance') > -1) {
+    c.activeTab = 'grievance';
+  } else {
+    c.activeTab = 'leave';
+  }
+
+  c.selectedSysId = $location.search().sys_id || '';
+
+  c.setTab = function(tab) {
+    c.activeTab = tab;
+  };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.tabbed-request-container {&#13;
+  border-radius: 12px;&#13;
+  overflow: hidden;&#13;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05);&#13;
+  border: 1px solid #e2e8f0;&#13;
+&#13;
+  .custom-tabs {&#13;
+    border-bottom: none;&#13;
+    li a {&#13;
+      font-weight: 600;&#13;
+      color: #64748b;&#13;
+      border: none;&#13;
+      border-radius: 8px 8px 0 0;&#13;
+      margin-right: 4px;&#13;
+      &amp;:hover { background: #f1f5f9; color: #1e293b; }&#13;
+    }&#13;
+    li.active a {&#13;
+      background: #ffffff;&#13;
+      color: #2563eb;&#13;
+      border-bottom: 2px solid #2563eb;&#13;
+    }&#13;
+  }&#13;
+&#13;
+  .badge-leave { background-color: #3b82f6; }&#13;
+  .badge-od { background-color: #06b6d4; }&#13;
+  .badge-grievance { background-color: #f59e0b; }&#13;
+&#13;
+  .list-group-item {&#13;
+    padding: 14px 18px;&#13;
+    border-left: 3px solid transparent;&#13;
+    transition: all 0.2s ease;&#13;
+&#13;
+    &amp;:hover {&#13;
+      background-color: #f8fafc;&#13;
+      border-left-color: #94a3b8;&#13;
+    }&#13;
+&#13;
+    &amp;.active-item {&#13;
+      background-color: #eff6ff;&#13;
+      border-left-color: #2563eb;&#13;
+    }&#13;
+  }&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>tabbed_requests</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Tabbed Requests</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    data.leaves = [];
+    data.ods = [];
+    data.grievances = [];
+
+    var userEmail = gs.getUser().getEmail();
+    var stuGr = new GlideRecord('x_1983287_studen_0_student_profile');
+    stuGr.addQuery('email', userEmail);
+    stuGr.query();
+
+    var stuId = null;
+    if (stuGr.next()) {
+        stuId = stuGr.getUniqueValue();
+    } else {
+        // Fallback for Admin/Dev testing
+        var testGr = new GlideRecord('x_1983287_studen_0_student_profile');
+        testGr.query();
+        if (testGr.next()) stuId = testGr.getUniqueValue();
+    }
+
+    if (!stuId) return;
+
+    // 1. Fetch Leave Requests
+    var lGr = new GlideRecord('x_1983287_studen_0_leave_request');
+    lGr.addQuery('student', stuId);
+    lGr.orderByDesc('sys_created_on');
+    lGr.query();
+    while (lGr.next()) {
+        data.leaves.push({
+            sys_id: lGr.getUniqueValue(),
+            number: lGr.getValue('number') || lGr.getDisplayValue(),
+            type: lGr.getValue('leave_type') || 'Leave',
+            from_date: lGr.getValue('from_date') || '',
+            status: lGr.getValue('status') || 'Submitted'
+        });
+    }
+
+    // 2. Fetch OD Requests
+    var oGr = new GlideRecord('x_1983287_studen_0_od_request');
+    oGr.addQuery('student', stuId);
+    oGr.orderByDesc('sys_created_on');
+    oGr.query();
+    while (oGr.next()) {
+        data.ods.push({
+            sys_id: oGr.getUniqueValue(),
+            number: oGr.getValue('number') || oGr.getDisplayValue(),
+            event: oGr.getValue('event_activity') || 'OD Event',
+            org: oGr.getValue('organization') || 'College',
+            from_date: oGr.getValue('from_date') || '',
+            status: oGr.getValue('status') || 'Submitted'
+        });
+    }
+
+    // 3. Fetch Grievances
+    var gGr = new GlideRecord('x_1983287_studen_0_grievance_request');
+    gGr.addQuery('student', stuId);
+    gGr.orderByDesc('sys_created_on');
+    gGr.query();
+    while (gGr.next()) {
+        data.grievances.push({
+            sys_id: gGr.getUniqueValue(),
+            number: gGr.getValue('number') || gGr.getDisplayValue(),
+            category: gGr.getValue('category') || 'General',
+            subject: gGr.getValue('subject') || '',
+            status: gGr.getValue('status') || 'Open'
+        });
+    }
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-16 17:13:39</sys_created_on>
+        <sys_id>78db203083b6cb1088dec1ffeeaad3e7</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Tabbed Requests</sys_name>
+        <sys_package display_value="Student Request Management System" source="x_1983287_studen_0">2bbb49edc326cf5078b65b2ed4013157</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Student Request Management System">2bbb49edc326cf5078b65b2ed4013157</sys_scope>
+        <sys_update_name>sp_widget_78db203083b6cb1088dec1ffeeaad3e7</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-16 17:13:39</sys_updated_on>
+        <template><![CDATA[<div class="panel panel-default tabbed-request-container">
+  <div class="panel-heading p-b-none">
+    <!-- Tabs Header -->
+    <ul class="nav nav-tabs custom-tabs">
+      <li ng-class="{'active': c.activeTab === 'leave'}">
+        <a href="javascript:void(0)" ng-click="c.setTab('leave')">
+          <i class="fa fa-calendar-check-o m-r-xs"></i> Leaves 
+          <span class="badge badge-leave">{{c.data.leaves.length}}</span>
+        </a>
+      </li>
+      <li ng-class="{'active': c.activeTab === 'od'}">
+        <a href="javascript:void(0)" ng-click="c.setTab('od')">
+          <i class="fa fa-briefcase m-r-xs"></i> ODs 
+          <span class="badge badge-od">{{c.data.ods.length}}</span>
+        </a>
+      </li>
+      <li ng-class="{'active': c.activeTab === 'grievance'}">
+        <a href="javascript:void(0)" ng-click="c.setTab('grievance')">
+          <i class="fa fa-exclamation-circle m-r-xs"></i> Grievances 
+          <span class="badge badge-grievance">{{c.data.grievances.length}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="list-group">
+    <!-- 1. Leave Tab List -->
+    <div ng-if="c.activeTab === 'leave'">
+      <a ng-repeat="item in c.data.leaves" 
+         href="?id=my_requests_stms&table=x_1983287_studen_0_leave_request&sys_id={{item.sys_id}}" 
+         class="list-group-item" 
+         ng-class="{'active-item': c.selectedSysId === item.sys_id}">
+        <div class="item-head">
+          <strong class="text-primary">{{item.number}}</strong>
+          <span class="pull-right label" ng-class="{'label-success': item.status === 'Approved', 'label-danger': item.status === 'Rejected', 'label-warning': item.status !== 'Approved' && item.status !== 'Rejected'}">{{item.status}}</span>
+        </div>
+        <div class="text-muted small m-t-xs">
+          <span><i class="fa fa-tag m-r-xs"></i>{{item.type}}</span> &bull; 
+          <span><i class="fa fa-calendar m-r-xs"></i>{{item.from_date}}</span>
+        </div>
+      </a>
+      <div ng-if="c.data.leaves.length === 0" class="p-lg text-center text-muted">No Leave requests found.</div>
+    </div>
+
+    <!-- 2. OD Tab List -->
+    <div ng-if="c.activeTab === 'od'">
+      <a ng-repeat="item in c.data.ods" 
+         href="?id=my_requests_stms&table=x_1983287_studen_0_od_request&sys_id={{item.sys_id}}" 
+         class="list-group-item" 
+         ng-class="{'active-item': c.selectedSysId === item.sys_id}">
+        <div class="item-head">
+          <strong class="text-info">{{item.number}}</strong>
+          <span class="pull-right label" ng-class="{'label-success': item.status === 'Approved', 'label-danger': item.status === 'Rejected', 'label-warning': item.status !== 'Approved' && item.status !== 'Rejected'}">{{item.status}}</span>
+        </div>
+        <div class="text-muted small m-t-xs">
+          <span><i class="fa fa-building m-r-xs"></i>{{item.event}} ({{item.org}})</span> &bull; 
+          <span><i class="fa fa-calendar m-r-xs"></i>{{item.from_date}}</span>
+        </div>
+      </a>
+      <div ng-if="c.data.ods.length === 0" class="p-lg text-center text-muted">No OD requests found.</div>
+    </div>
+
+    <!-- 3. Grievance Tab List -->
+    <div ng-if="c.activeTab === 'grievance'">
+      <a ng-repeat="item in c.data.grievances" 
+         href="?id=my_requests_stms&table=x_1983287_studen_0_grievance_request&sys_id={{item.sys_id}}" 
+         class="list-group-item" 
+         ng-class="{'active-item': c.selectedSysId === item.sys_id}">
+        <div class="item-head">
+          <strong class="text-warning">{{item.number}}</strong>
+          <span class="pull-right label" ng-class="{'label-success': item.status === 'Resolved' || item.status === 'Closed', 'label-info': item.status !== 'Resolved' && item.status !== 'Closed'}">{{item.status}}</span>
+        </div>
+        <div class="text-muted small m-t-xs">
+          <span><i class="fa fa-folder-open m-r-xs"></i>{{item.category}}</span> &bull; 
+          <span>{{item.subject}}</span>
+        </div>
+      </a>
+      <div ng-if="c.data.grievances.length === 0" class="p-lg text-center text-muted">No Grievances logged.</div>
+    </div>
+  </div>
+</div>]]></template>
+    </sp_widget>
+</record_update>

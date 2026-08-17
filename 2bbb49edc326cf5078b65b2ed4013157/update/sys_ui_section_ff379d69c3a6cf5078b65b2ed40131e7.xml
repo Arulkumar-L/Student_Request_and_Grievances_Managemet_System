@@ -4,13 +4,13 @@
             <element>accommodation_type</element>
             <position>0</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-08-09 13:12:55</sys_created_on>
-            <sys_id>8402731ec3ee879078b65b2ed40131f7</sys_id>
+            <sys_created_on>2026-08-16 12:55:42</sys_created_on>
+            <sys_id>9c313be883be8b1088dec1ffeeaad3c0</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="Accommodation" display_value="Accommodation" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">ff379d69c3a6cf5078b65b2ed40131e7</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-08-09 13:12:55</sys_updated_on>
+            <sys_updated_on>2026-08-16 12:55:42</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
@@ -18,13 +18,13 @@
             <element>hostel_block</element>
             <position>1</position>
             <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2026-08-09 13:12:55</sys_created_on>
-            <sys_id>0402731ec3ee879078b65b2ed40131f8</sys_id>
+            <sys_created_on>2026-08-16 12:55:42</sys_created_on>
+            <sys_id>1c313be883be8b1088dec1ffeeaad3c1</sys_id>
             <sys_mod_count>0</sys_mod_count>
             <sys_ui_formatter/>
             <sys_ui_section caption="Accommodation" display_value="Accommodation" name="x_1983287_studen_0_student_profile" sys_domain="global" view="Default view">ff379d69c3a6cf5078b65b2ed40131e7</sys_ui_section>
             <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2026-08-09 13:12:55</sys_updated_on>
+            <sys_updated_on>2026-08-16 12:55:42</sys_updated_on>
             <sys_user/>
             <type/>
         </sys_ui_element>
