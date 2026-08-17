@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller = function($scope, spUtil) {
+  var c = this;
+
+  c.takeAction = function(item, actionType, rejectReason) {
+    c.server.get({
+      action: actionType,
+      table: item.table,
+      sys_id: item.sys_id,
+      stage: item.stage,
+      reason: rejectReason || ''
+    }).then(function(r) {
+      c.data.pendingList = r.data.pendingList;
+      spUtil.addInfoMessage(item.number + ' has been ' + actionType + 'd.');
+    });
+  };
+
+  c.promptReject = function(item) {
+    var reason = prompt("Enter Rejection Reason for " + item.number + ":", "Not justified / Incomplete info");
+    if (reason !== null && reason.trim() !== "") {
+      c.takeAction(item, 'reject', reason);
+    }
+  };
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css>.staff-dashboard {&#13;
+  .approver-header {&#13;
+    background: #ffffff;&#13;
+    padding: 20px;&#13;
+    border-radius: 12px;&#13;
+    margin-bottom: 20px;&#13;
+    border: 1px solid #e2e8f0;&#13;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.03);&#13;
+  }&#13;
+&#13;
+  .metric-card {&#13;
+    border-radius: 12px;&#13;
+    padding: 20px;&#13;
+    color: white;&#13;
+    display: flex;&#13;
+    align-items: center;&#13;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);&#13;
+&#13;
+    .metric-icon {&#13;
+      font-size: 32px;&#13;
+      margin-right: 16px;&#13;
+      opacity: 0.9;&#13;
+    }&#13;
+    .metric-number {&#13;
+      font-size: 24px;&#13;
+      font-weight: 800;&#13;
+      line-height: 1.1;&#13;
+    }&#13;
+    .metric-text {&#13;
+      font-size: 12px;&#13;
+      text-transform: uppercase;&#13;
+      font-weight: 600;&#13;
+      opacity: 0.9;&#13;
+    }&#13;
+&#13;
+    &amp;.bg-orange { background: linear-gradient(135deg, #f59e0b, #d97706); }&#13;
+    &amp;.bg-teal { background: linear-gradient(135deg, #0d9488, #0f766e); }&#13;
+    &amp;.bg-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }&#13;
+  }&#13;
+&#13;
+  .inbox-panel {&#13;
+    border-radius: 12px;&#13;
+    border: 1px solid #e2e8f0;&#13;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.04);&#13;
+    overflow: hidden;&#13;
+&#13;
+    .badge-stage {&#13;
+      background-color: #6366f1;&#13;
+      padding: 5px 10px;&#13;
+      font-size: 11px;&#13;
+    }&#13;
+&#13;
+    .action-btns .btn {&#13;
+      border-radius: 20px;&#13;
+      font-weight: 600;&#13;
+      padding: 4px 12px;&#13;
+      margin-left: 4px;&#13;
+    }&#13;
+  }&#13;
+}</css>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>false</has_preview>
+        <id>approver_action_inbox</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {
+  
+}]]></link>
+        <name>Approver Action Inbox</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+    var userId = gs.getUserID();
+    var userEmail = gs.getUser().getEmail();
+    var userName = gs.getUserDisplayName();
+
+    data.isApprover = false;
+    data.approverRoles = [];
+    data.pendingList = [];
+    data.reportMetrics = {
+        pendingApprovals: 0,
+        approvedTotal: 0,
+        rejectedTotal: 0
+    };
+
+    // 1. Process Actions (Approve / Reject)
+    if (input && input.action) {
+        var recGr = new GlideRecord(input.table);
+        if (recGr.get(input.sys_id)) {
+            if (input.action === 'approve') {
+                if (input.stage === 'Mentor') recGr.setValue('mentor_approval', 'Approved');
+                if (input.stage === 'Class Advisor') recGr.setValue('advisor_approval', 'Approved');
+                if (input.stage === 'HOD') recGr.setValue('hod_approval', 'Approved');
+                if (input.stage === 'Warden') recGr.setValue('warden_approval', 'Approved');
+            } else if (input.action === 'reject') {
+                if (input.stage === 'Mentor') recGr.setValue('mentor_approval', 'Rejected');
+                if (input.stage === 'Class Advisor') recGr.setValue('advisor_approval', 'Rejected');
+                if (input.stage === 'HOD') recGr.setValue('hod_approval', 'Rejected');
+                if (input.stage === 'Warden') recGr.setValue('warden_approval', 'Rejected');
+                
+                recGr.setValue('status', 'Rejected');
+                recGr.setValue('rejection_reason', input.reason || 'Rejected by ' + input.stage);
+            }
+            recGr.update();
+        }
+    }
+
+    // 2. Identify if user is Mentor / Advisor / HOD / Warden
+    // Check against student profiles
+    var mentorCheck = new GlideRecord('x_1983287_studen_0_student_profile');
+    mentorCheck.addQuery('mentor', userId).addOrCondition('mentor.email', userEmail);
+    mentorCheck.query();
+    var isMentor = mentorCheck.hasNext();
+
+    var advisorCheck = new GlideRecord('x_1983287_studen_0_student_profile');
+    advisorCheck.addQuery('class_advisor', userId).addOrCondition('class_advisor.email', userEmail);
+    advisorCheck.query();
+    var isAdvisor = advisorCheck.hasNext();
+
+    var hodCheck = new GlideRecord('x_1983287_studen_0_student_profile');
+    hodCheck.addQuery('hod', userId).addOrCondition('department.hod', userId);
+    hodCheck.query();
+    var isHOD = hodCheck.hasNext() || gs.hasRole('admin');
+
+    var wardenCheck = new GlideRecord('x_1983287_studen_0_student_profile');
+    wardenCheck.addQuery('warden', userId).addOrCondition('warden.email', userEmail);
+    wardenCheck.query();
+    var isWarden = wardenCheck.hasNext();
+
+    if (isMentor) data.approverRoles.push('Mentor');
+    if (isAdvisor) data.approverRoles.push('Class Advisor');
+    if (isHOD) data.approverRoles.push('HOD');
+    if (isWarden) data.approverRoles.push('Warden');
+
+    // If Admin, grant all roles for preview
+    if (gs.hasRole('admin') && data.approverRoles.length === 0) {
+        data.approverRoles = ['Mentor', 'Class Advisor', 'HOD', 'Warden'];
+    }
+
+    data.isApprover = (data.approverRoles.length > 0);
+
+    if (!data.isApprover) {
+        return; // Ordinary student
+    }
+
+    // 3. Fetch Pending Leave Requests for this approver
+    var leaveGr = new GlideRecord('x_1983287_studen_0_leave_request');
+    leaveGr.addQuery('status', 'Submitted');
+    leaveGr.orderByDesc('sys_created_on');
+    leaveGr.query();
+
+    while (leaveGr.next()) {
+        var stu = leaveGr.student.getRefRecord();
+        var isHosteller = stu.getValue('accommodation_type') === 'Hosteller';
+        var stage = '';
+
+        // Sequential Check
+        if (leaveGr.getValue('mentor_approval') === 'Pending' && data.approverRoles.indexOf('Mentor') > -1) {
+            stage = 'Mentor';
+        } else if (leaveGr.getValue('mentor_approval') === 'Approved' && leaveGr.getValue('advisor_approval') === 'Pending' && data.approverRoles.indexOf('Class Advisor') > -1) {
+            stage = 'Class Advisor';
+        } else if (leaveGr.getValue('advisor_approval') === 'Approved' && leaveGr.getValue('hod_approval') === 'Pending' && data.approverRoles.indexOf('HOD') > -1) {
+            stage = 'HOD';
+        } else if (isHosteller && leaveGr.getValue('hod_approval') === 'Approved' && leaveGr.getValue('warden_approval') === 'Pending' && data.approverRoles.indexOf('Warden') > -1) {
+            stage = 'Warden';
+        }
+
+        if (stage) {
+            data.pendingList.push({
+                sys_id: leaveGr.getUniqueValue(),
+                type: 'Leave',
+                table: 'x_1983287_studen_0_leave_request',
+                number: leaveGr.getValue('number'),
+                student_name: stu.isValidRecord() ? stu.getValue('student_name') : 'Student',
+                reg_no: leaveGr.getValue('register_number') || '',
+                dept: stu.isValidRecord() && stu.department ? stu.department.getDisplayValue() : '',
+                acc_type: stu.isValidRecord() ? stu.getValue('accommodation_type') : '',
+                details: (leaveGr.getValue('leave_type') || 'Leave') + ' (' + leaveGr.getValue('from_date') + ' to ' + leaveGr.getValue('to_date') + ')',
+                reason: leaveGr.getValue('reason') || 'No reason provided',
+                stage: stage
+            });
+        }
+    }
+
+    // 4. Fetch Pending OD Requests
+    var odGr = new GlideRecord('x_1983287_studen_0_od_request');
+    odGr.addQuery('status', 'Submitted');
+    odGr.orderByDesc('sys_created_on');
+    odGr.query();
+
+    while (odGr.next()) {
+        var stuOd = odGr.student.getRefRecord();
+        var isHostellerOd = stuOd.getValue('accommodation_type') === 'Hosteller';
+        var stageOd = '';
+
+        if (odGr.getValue('mentor_approval') === 'Pending' && data.approverRoles.indexOf('Mentor') > -1) {
+            stageOd = 'Mentor';
+        } else if (odGr.getValue('mentor_approval') === 'Approved' && odGr.getValue('advisor_approval') === 'Pending' && data.approverRoles.indexOf('Class Advisor') > -1) {
+            stageOd = 'Class Advisor';
+        } else if (odGr.getValue('advisor_approval') === 'Approved' && odGr.getValue('hod_approval') === 'Pending' && data.approverRoles.indexOf('HOD') > -1) {
+            stageOd = 'HOD';
+        } else if (isHostellerOd && odGr.getValue('hod_approval') === 'Approved' && odGr.getValue('warden_approval') === 'Pending' && data.approverRoles.indexOf('Warden') > -1) {
+            stageOd = 'Warden';
+        }
+
+        if (stageOd) {
+            data.pendingList.push({
+                sys_id: odGr.getUniqueValue(),
+                type: 'On-Duty (OD)',
+                table: 'x_1983287_studen_0_od_request',
+                number: odGr.getValue('number'),
+                student_name: stuOd.isValidRecord() ? stuOd.getValue('student_name') : 'Student',
+                reg_no: odGr.getValue('register_number') || '',
+                dept: stuOd.isValidRecord() && stuOd.department ? stuOd.department.getDisplayValue() : '',
+                acc_type: stuOd.isValidRecord() ? stuOd.getValue('accommodation_type') : '',
+                details: (odGr.getValue('event_activity') || 'OD') + ' at ' + (odGr.getValue('organization') || 'College'),
+                reason: odGr.getValue('reason') || 'No reason provided',
+                stage: stageOd
+            });
+        }
+    }
+
+    data.reportMetrics.pendingApprovals = data.pendingList.length;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2026-08-17 16:04:59</sys_created_on>
+        <sys_id>c2c4ed49833e4f1088dec1ffeeaad3c8</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Approver Action Inbox</sys_name>
+        <sys_package display_value="Student Request Management System" source="x_1983287_studen_0">2bbb49edc326cf5078b65b2ed4013157</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="Student Request Management System">2bbb49edc326cf5078b65b2ed4013157</sys_scope>
+        <sys_update_name>sp_widget_c2c4ed49833e4f1088dec1ffeeaad3c8</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2026-08-17 16:04:59</sys_updated_on>
+        <template><![CDATA[<div class="staff-dashboard" ng-if="data.isApprover">
+
+  <!-- Approver Welcome & Metrics Banner -->
+  <div class="approver-header">
+    <div>
+      <h3 class="m-n font-bold text-dark"><i class="fa fa-check-square-o text-primary m-r-xs"></i> Staff Approval & Management Center</h3>
+      <p class="text-muted m-t-xs">
+        Active Roles: 
+        <span ng-repeat="role in data.approverRoles" class="label label-info m-r-xs">{{role}}</span>
+      </p>
+    </div>
+  </div>
+
+  <!-- Quick Analytics Strip -->
+  <div class="row m-b-lg">
+    <div class="col-md-4">
+      <div class="metric-card bg-orange">
+        <div class="metric-icon"><i class="fa fa-hourglass-half"></i></div>
+        <div>
+          <div class="metric-number">{{data.pendingList.length}}</div>
+          <div class="metric-text">Action Required (Pending)</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="metric-card bg-teal">
+        <div class="metric-icon"><i class="fa fa-shield"></i></div>
+        <div>
+          <div class="metric-number">{{data.approverRoles.length}}</div>
+          <div class="metric-text">Assigned Hierarchy Roles</div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="metric-card bg-blue">
+        <div class="metric-icon"><i class="fa fa-users"></i></div>
+        <div>
+          <div class="metric-number"><i class="fa fa-check"></i> Live</div>
+          <div class="metric-text">Department Queue Active</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Approvals Action Table -->
+  <div class="panel panel-default inbox-panel">
+    <div class="panel-heading">
+      <h4 class="panel-title font-bold">
+        <i class="fa fa-inbox text-warning m-r-xs"></i> Pending Student Approvals ({{data.pendingList.length}})
+      </h4>
+    </div>
+    
+    <div class="table-responsive" ng-if="data.pendingList.length > 0">
+      <table class="table table-hover align-middle">
+        <thead>
+          <tr>
+            <th>Type</th>
+            <th>Req #</th>
+            <th>Student Details</th>
+            <th>Reason / Details</th>
+            <th>Your Stage</th>
+            <th class="text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="item in data.pendingList">
+            <td>
+              <span class="label" ng-class="{'label-primary': item.type === 'Leave', 'label-info': item.type !== 'Leave'}">{{item.type}}</span>
+            </td>
+            <td><strong>{{item.number}}</strong></td>
+            <td>
+              <div class="font-bold">{{item.student_name}}</div>
+              <small class="text-muted">{{item.reg_no}} &bull; {{item.acc_type}}</small>
+            </td>
+            <td>
+              <div>{{item.details}}</div>
+              <small class="text-muted italic">"{{item.reason}}"</small>
+            </td>
+            <td><span class="badge badge-stage">{{item.stage}}</span></td>
+            <td class="text-right action-btns">
+              <button class="btn btn-sm btn-success" ng-click="c.takeAction(item, 'approve')">
+                <i class="fa fa-check"></i> Approve
+              </button>
+              <button class="btn btn-sm btn-danger" ng-click="c.promptReject(item)">
+                <i class="fa fa-times"></i> Reject
+              </button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="p-xl text-center text-muted" ng-if="data.pendingList.length === 0">
+      <i class="fa fa-smile-o fa-3x text-success"></i>
+      <h4 class="m-t-md">All Caught Up!</h4>
+      <p>There are no pending student requests waiting for your approval.</p>
+    </div>
+  </div>
+
+</div>]]></template>
+    </sp_widget>
+</record_update>

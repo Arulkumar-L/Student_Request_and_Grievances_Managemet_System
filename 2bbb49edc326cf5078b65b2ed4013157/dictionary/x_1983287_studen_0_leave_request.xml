@@ -1,65 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
     <element attributes="enforce_dot_walk_cross_scope_access=true,timeFromCreateToActivate=20000" db_object_id="712c2df9c3aa439078b65b2ed4013183" label="Leave Request" max_length="40" name="x_1983287_studen_0_leave_request" type="collection">
-        <element choice="3" label="Mentor Approval" max_length="40" name="mentor_approval" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Pending" value="pending"/>
-                <element inactive_on_update="false" label="Approved" value="approved"/>
-                <element inactive_on_update="false" label="Rejected" value="rejected"/>
-            </choice>
-        </element>
+        <element label="Attachment" max_length="40" name="attachment" type="file_attachment"/>
+        <element label="Current Approver" max_length="32" name="current_approver" reference="sys_user" type="reference"/>
         <element label="From Date" mandatory="true" max_length="40" name="from_date" type="glide_date"/>
         <element label="Reason" max_length="500" name="reason" type="string"/>
-        <element attributes="edge_encryption_enabled=true" label="Register Number" max_length="40" name="register_number" type="string"/>
-        <element attributes="edge_encryption_enabled=true" label="Email" max_length="40" name="email" type="string"/>
-        <element label="Attachment" max_length="40" name="attachment" type="file_attachment"/>
+        <element choice="1" label="Warden Approval" max_length="40" name="warden_approval" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Rejected" value="rejected"/>
+                <element inactive_on_update="false" label="Pending" value="pending"/>
+                <element inactive_on_update="false" label="Not Required" value="not_required"/>
+                <element inactive_on_update="false" label="Approved" value="approved"/>
+            </choice>
+        </element>
+        <element label="Rejection Reason" max_length="500" name="rejection_reason" type="string"/>
         <element choice="1" label="Advisor Approval" max_length="40" name="advisor_approval" type="choice">
             <choice>
+                <element inactive_on_update="false" label="Rejected" value="rejected"/>
                 <element inactive_on_update="false" label="Pending" value="pending"/>
                 <element inactive_on_update="false" label="Approved" value="approved"/>
+            </choice>
+        </element>
+        <element choice="1" label="HOD Approval" max_length="40" name="hod_approval" type="choice">
+            <choice>
                 <element inactive_on_update="false" label="Rejected" value="rejected"/>
+                <element inactive_on_update="false" label="Pending" value="pending"/>
+                <element inactive_on_update="false" label="Approved" value="approved"/>
+            </choice>
+        </element>
+        <element choice="3" label="Mentor Approval" max_length="40" name="mentor_approval" type="choice">
+            <choice>
+                <element inactive_on_update="false" label="Rejected" value="rejected"/>
+                <element inactive_on_update="false" label="Pending" value="pending"/>
+                <element inactive_on_update="false" label="Approved" value="approved"/>
             </choice>
         </element>
         <element label="Student" max_length="32" name="student" reference="x_1983287_studen_0_student_profile" type="reference"/>
-        <element choice="1" label="Warden Approval" max_length="40" name="warden_approval" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Not Required" value="not_required"/>
-                <element inactive_on_update="false" label="Rejected" value="rejected"/>
-                <element inactive_on_update="false" label="Approved" value="approved"/>
-                <element inactive_on_update="false" label="Pending" value="pending"/>
-            </choice>
-        </element>
+        <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="Register Number" max_length="40" name="register_number" type="string"/>
         <element choice="1" label="Leave Type" mandatory="true" max_length="40" name="leave_type" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Emergency" value="emergency"/>
-                <element inactive_on_update="false" label="Other" value="other"/>
                 <element inactive_on_update="false" label="Casual" value="casual"/>
+                <element inactive_on_update="false" label="Other" value="other"/>
                 <element inactive_on_update="false" label="Medical" value="medical"/>
+                <element inactive_on_update="false" label="Emergency" value="emergency"/>
             </choice>
         </element>
-        <element label="To Date" mandatory="true" max_length="40" name="to_date" type="glide_date"/>
-        <element label="Current Approver" max_length="32" name="current_approver" reference="sys_user" type="reference"/>
-        <element choice="1" label="HOD Approval" max_length="40" name="hod_approval" type="choice">
-            <choice>
-                <element inactive_on_update="false" label="Pending" value="pending"/>
-                <element inactive_on_update="false" label="Rejected" value="rejected"/>
-                <element inactive_on_update="false" label="Approved" value="approved"/>
-            </choice>
-        </element>
-        <element attributes="ignore_filter_on_new=true" default="javascript:global.getNextObjNumberPadded();" label="Number" max_length="40" name="number" type="string"/>
-        <element label="Rejection Reason" max_length="500" name="rejection_reason" type="string"/>
         <element choice="1" label="Status" max_length="40" name="status" type="choice">
             <choice>
-                <element inactive_on_update="false" label="Approved" value="Rejected"/>
-                <element inactive_on_update="false" label="Warden Review" value="warden_review"/>
                 <element inactive_on_update="false" label="Submitted" value="submitted"/>
-                <element inactive_on_update="false" label="Mentor Review" value="mentor_review"/>
-                <element inactive_on_update="false" label="Advisor Review" value="advisor_review"/>
-                <element inactive_on_update="false" label="Approved" value="approved"/>
-                <element inactive_on_update="false" label="HOD Review" value="hod_review"/>
                 <element inactive_on_update="false" label="Draft" value="draft"/>
                 <element inactive_on_update="false" label="Cancelled" value="cancelled"/>
+                <element inactive_on_update="false" label="Approved" value="Rejected"/>
+                <element inactive_on_update="false" label="Mentor Review" value="mentor_review"/>
+                <element inactive_on_update="false" label="Advisor Review" value="advisor_review"/>
+                <element inactive_on_update="false" label="Warden Review" value="warden_review"/>
+                <element inactive_on_update="false" label="HOD Review" value="hod_review"/>
             </choice>
         </element>
+        <element attributes="edge_encryption_enabled=true" label="Email" max_length="40" name="email" type="string"/>
+        <element label="To Date" mandatory="true" max_length="40" name="to_date" type="glide_date"/>
         <index name="index">
             <element name="current_approver"/>
         </index>
